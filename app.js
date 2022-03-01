@@ -71,15 +71,19 @@ const App = {
     directionPressHandler(e) {
       switch (e.code) {
         case 'KeyW':
+          if (this.snake.direction === 'down') return
           this.snake.direction = 'up'
           break
         case 'KeyA':
+          if (this.snake.direction === 'right') return
           this.snake.direction = 'left'
           break
         case 'KeyS':
+          if (this.snake.direction === 'up') return
           this.snake.direction = 'down'
           break
         case 'KeyD':
+          if (this.snake.direction === 'left') return
           this.snake.direction = 'right'
           break
       }
