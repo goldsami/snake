@@ -7,9 +7,17 @@
   <title>Snake</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body id="app">
-  Snake- {{val}}
-  <button @click="increment">+</button>
+<body>
+  <div id="app">
+    Snake dir: {{snake.direction}} <br>
+    <button @click="start">Start</button>
+    <div class="field">
+      <div class="rows" v-for="x of 10">
+        <div :class="{'snake-cell': isSnake(x, y)}" class="cell" v-for="y of 10"></div>
+      </div>
+    </div>
+    {{JSON.stringify(snake.cells)}}
+  </div>
   <script src="https://unpkg.com/vue@next"></script>
   <script src="app.js"></script>
 </body>

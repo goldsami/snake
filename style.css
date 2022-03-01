@@ -1,3 +1,17 @@
 #app {
-  color: red;
+}
+
+.rows {
+  display: flex;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  background-color: lightgrey;
+  border: 1px solid;
+}
+
+.snake-cell {
+  background-color: darkgray;
 }
