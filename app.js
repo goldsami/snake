@@ -2,7 +2,7 @@ const App = {
   data() {
     return {
       gameSpeed: 500,
-      fieldLen: 3,
+      fieldLen: 10,
       snake: {
         direction: null,
         cells: []
@@ -41,8 +41,9 @@ const App = {
     generateFood() {
       const freeCells = this.field.filter(val => !this.isSnake(val.x, val.y))
       if (!freeCells.length) {
-        alert('You win')
         this.endGame()
+        setTimeout(() => alert('You win'))
+        return
       }
       const foodCellIndex = Math.floor(Math.random() * freeCells.length)
       this.food = freeCells[foodCellIndex]
@@ -85,6 +86,7 @@ const App = {
           break
       }
       if (this.isSnake(newCell.x, newCell.y)) {
+        alert('Mortis')
         this.endGame()
         return
       }
@@ -129,8 +131,8 @@ const App = {
       else  return  value
     },
     endGame() {
-      alert('Mortis')
       clearInterval(this.timeoutId)
+      this.food = null
       this.snake.direction = null
       if (this.score > this.maxScore) {
         this.maxScore = this.score

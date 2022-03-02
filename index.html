@@ -13,7 +13,7 @@
     <button @click="start">Start</button>
     <h1>Score: {{score}}; Max score: {{maxScore}}</h1>
     <div class="field">
-      <div class="rows" v-for="x of 10">
+      <div class="rows" v-for="x of fieldLen">
         <div :class="{
           'odd-cell': !(x + y) % 2,
           'even-cell': (x + y) % 2,
@@ -21,7 +21,7 @@
           'food-cell': isFood(x, y),
           'snake-head': isSnakeHead(x, y)
           }"
-             class="cell" v-for="y of 10"></div>
+             class="cell" v-for="y of fieldLen"></div>
       </div>
     </div>
   </div>
