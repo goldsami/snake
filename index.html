@@ -10,19 +10,21 @@
 <body>
   <div id="app">
     <h1>Snake</h1>
-    <h3>Score: {{score}}; Max score: {{maxScore}}</h3>
-    <div class="field">
-      <div class="rows" v-for="x of fieldLen">
-        <div :class="{
+    <div v-cloak>
+      <h3>Score: {{score}}; Max score: {{maxScore}}</h3>
+      <div class="field">
+        <div class="rows" v-for="x of fieldLen">
+          <div :class="{
           'odd-cell': !(x + y) % 2,
           'even-cell': (x + y) % 2,
           'snake-cell': isSnake(x, y),
           'food-cell': isFood(x, y),
           'snake-head': isSnakeHead(x, y)
           }"
-             class="cell" v-for="y of fieldLen"></div>
+               class="cell" v-for="y of fieldLen"></div>
+        </div>
+        <div v-if="!gameStarted" class="start-game"><button @click="start">Start</button></div>
       </div>
-      <div v-if="!gameStarted" class="start-game"><button @click="start">Start</button></div>
     </div>
   </div>
   <script src="https://unpkg.com/vue@next"></script>
