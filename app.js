@@ -25,6 +25,7 @@ const App = {
   },
   methods: {
     start() {
+      this.allowChangeDir = true
       this.snake.cells = [
           {x: 3, y: 3}
       ]
