@@ -13,7 +13,7 @@
     <button @click="start">Start</button>
     <div class="field">
       <div class="rows" v-for="x of 10">
-        <div :class="{'snake-cell': isSnake(x, y)}" class="cell" v-for="y of 10"></div>
+        <div :class="{'snake-cell': isSnake(x, y), 'food-cell': isFood(x, y)}" class="cell" v-for="y of 10"></div>
       </div>
     </div>
     {{JSON.stringify(snake.cells)}}

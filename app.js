@@ -7,14 +7,16 @@ const App = {
         cells: []
       },
       food: null,
-      timeoutId: null
+      timeoutId: null,
+      field: [],
     };
   },
   methods: {
     start() {
       this.snake.cells = [
-          {x: 3, y: 3}, {x: 3, y: 4}, {x: 3, y: 5}, {x: 4, y: 5}, {x: 5, y: 5}, {x: 5, y: 6}, {x: 5, y: 7}
+          {x: 3, y: 3}
       ]
+      this.generateFood()
       if (this.timeoutId) clearInterval((this.timeoutId))
       this.timeoutId = setInterval(() => {
         console.log('interval')
@@ -23,8 +25,16 @@ const App = {
         }
       }, this.gameSpeed)
     },
+    generateFood() {
+      const freeCells = this.field.filter(val => !this.isSnake(val.x, val.y))
+      const foodCellIndex = Math.floor(Math.random() * freeCells.length) + 1
+      this.food = freeCells[foodCellIndex]
+    },
     isSnake(x, y) {
       return !!this.snake.cells.find(c => c.x === x && c.y === y)
+    },
+    isFood(x, y) {
+      return this.food?.x === x && this.food?.y === y
     },
     makeStep() {
       let newCell;
@@ -34,34 +44,36 @@ const App = {
             x: this.returnInRange(this.snake.cells[0].x - 1),
             y: this.returnInRange(this.snake.cells[0].y)
           }
-          this.snake.cells.pop()
           break
         case 'left':
           newCell = {
             x: this.returnInRange(this.snake.cells[0].x),
             y: this.returnInRange(this.snake.cells[0].y - 1)
           }
-          this.snake.cells.pop()
           break
         case 'down':
           newCell = {
             x: this.returnInRange(this.snake.cells[0].x + 1),
             y: this.returnInRange(this.snake.cells[0].y)
           }
-          this.snake.cells.pop()
           break
         case 'right':
           newCell = {
             x: this.returnInRange(this.snake.cells[0].x),
             y: this.returnInRange(this.snake.cells[0].y + 1)
           }
-          this.snake.cells.pop()
           break
       }
       if (this.isSnake(newCell.x, newCell.y)) {
         this.endGame()
+        return
       }
       this.snake.cells.unshift(newCell);
+      if (this.isFood(newCell.x, newCell.y)) {
+        this.generateFood()
+      } else {
+        this.snake.cells.pop()
+      }
     },
     spacePressHandler(e) {
       if (e.code === 'Space') {
@@ -98,13 +110,15 @@ const App = {
       clearInterval(this.timeoutId)
       this.snake.direction = null
     },
-    generateFood() {
-
-    }
   },
   created() {
     document.addEventListener('keyup', this.spacePressHandler)
     document.addEventListener('keyup', this.directionPressHandler)
+  },
+  mounted() {
+    this.field =  Array(10).fill().map((a,i) => {
+      return Array(10).fill().map((_, j) => ({x: i+1, y: j+1}))
+    }).flat()
   },
   unmounted() {
     document.removeEventListener('keyup', this.spacePressHandler)
