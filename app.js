@@ -5,7 +5,7 @@ const App = {
       fieldLen: 10,
       snake: {
         direction: null,
-        cells: []
+        cells: [{x: 4, y: 4}]
       },
       food: null,
       timeoutId: null,
@@ -17,6 +17,7 @@ const App = {
         return localStorage.getItem('maxScore') || 0
       },
       allowChangeDir: true,
+      gameStarted: false,
     };
   },
   computed: {
@@ -26,9 +27,10 @@ const App = {
   },
   methods: {
     start() {
+      this.gameStarted = true
       this.allowChangeDir = true
       this.snake.cells = [
-          {x: 1, y: 1}
+          {x: 4, y: 4}
       ]
       this.generateFood()
       if (this.timeoutId) clearInterval((this.timeoutId))
@@ -132,6 +134,7 @@ const App = {
     },
     endGame() {
       clearInterval(this.timeoutId)
+      this.gameStarted = false
       this.food = null
       this.snake.direction = null
       if (this.score > this.maxScore) {

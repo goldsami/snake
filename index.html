@@ -9,9 +9,8 @@
 </head>
 <body>
   <div id="app">
-    Snake dir: {{snake.direction}} <br>
-    <button @click="start">Start</button>
-    <h1>Score: {{score}}; Max score: {{maxScore}}</h1>
+    <h1>Snake</h1>
+    <h3>Score: {{score}}; Max score: {{maxScore}}</h3>
     <div class="field">
       <div class="rows" v-for="x of fieldLen">
         <div :class="{
@@ -23,6 +22,7 @@
           }"
              class="cell" v-for="y of fieldLen"></div>
       </div>
+      <div v-if="!gameStarted" class="start-game"><button @click="start">Start</button></div>
     </div>
   </div>
   <script src="https://unpkg.com/vue@next"></script>
