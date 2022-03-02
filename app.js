@@ -1,5 +1,5 @@
-import { useSnake } from "./use/snake.js"
-import { useInterval } from  "./use/interval.js"
+import { useSnake } from './use/snake.js'
+import { useInterval } from  './use/interval.js'
 
 const App = {
   setup() {
@@ -32,6 +32,8 @@ const App = {
   },
   methods: {
     start() {
+      if (this.gameStarted) return
+
       this.gameStarted = true
       this.allowChangeDir = true
       this.snake.cells = [
@@ -105,6 +107,7 @@ const App = {
       }
     },
     directionPressHandler(e) {
+      console.log('dir press', this.allowChangeDir)
       if (!this.allowChangeDir) return
       switch (e.code) {
         case 'KeyW':
@@ -123,6 +126,8 @@ const App = {
           if (this.snake.direction === 'left') return
           this.snake.direction = 'right'
           break
+        default:
+          return
       }
       this.allowChangeDir = false
     },
