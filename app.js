@@ -9,7 +9,19 @@ const App = {
       food: null,
       timeoutId: null,
       field: [],
+      set maxScore(val) {
+        localStorage.setItem('maxScore', val)
+      },
+      get maxScore() {
+        return localStorage.getItem('maxScore') || 0
+      },
+      allowChangeDir: true,
     };
+  },
+  computed: {
+    score() {
+      return this.snake.cells.length - 1
+    },
   },
   methods: {
     start() {
@@ -32,6 +44,9 @@ const App = {
     },
     isSnake(x, y) {
       return !!this.snake.cells.find(c => c.x === x && c.y === y)
+    },
+    isSnakeHead(x, y) {
+      return this.snake.cells[0]?.x === x && this.snake.cells[0].y === y;
     },
     isFood(x, y) {
       return this.food?.x === x && this.food?.y === y
@@ -74,6 +89,7 @@ const App = {
       } else {
         this.snake.cells.pop()
       }
+      this.allowChangeDir = true
     },
     spacePressHandler(e) {
       if (e.code === 'Space') {
@@ -81,6 +97,7 @@ const App = {
       }
     },
     directionPressHandler(e) {
+      if (!this.allowChangeDir) return
       switch (e.code) {
         case 'KeyW':
           if (this.snake.direction === 'down') return
@@ -99,6 +116,7 @@ const App = {
           this.snake.direction = 'right'
           break
       }
+      this.allowChangeDir = false
     },
     returnInRange(value, start = 1, end = 10) {
       if (value > end) return value - end
@@ -109,6 +127,9 @@ const App = {
       alert('Mortis')
       clearInterval(this.timeoutId)
       this.snake.direction = null
+      if (this.score > this.maxScore) {
+        this.maxScore = this.score
+      }
     },
   },
   created() {
