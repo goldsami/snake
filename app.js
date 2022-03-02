@@ -1,12 +1,17 @@
+import { useSnake } from "./use/snake.js"
+import { useInterval } from  "./use/interval.js"
+
 const App = {
+  setup() {
+    return {
+      ...useSnake(),
+      ...useInterval(),
+    }
+  },
   data() {
     return {
       gameSpeed: 500,
       fieldLen: 10,
-      snake: {
-        direction: null,
-        cells: [{x: 4, y: 4}]
-      },
       food: null,
       timeoutId: null,
       field: [],
@@ -30,10 +35,10 @@ const App = {
       this.gameStarted = true
       this.allowChangeDir = true
       this.snake.cells = [
-          {x: 4, y: 4}
+          this.defaultCell
       ]
       this.generateFood()
-      if (this.timeoutId) clearInterval((this.timeoutId))
+      this.clearInterval()
       this.timeoutId = setInterval(() => {
         if (this.snake.direction) {
           this.makeStep()
@@ -50,12 +55,6 @@ const App = {
       const foodCellIndex = Math.floor(Math.random() * freeCells.length)
       this.food = freeCells[foodCellIndex]
     },
-    isSnake(x, y) {
-      return !!this.snake.cells.find(c => c.x === x && c.y === y)
-    },
-    isSnakeHead(x, y) {
-      return this.snake.cells[0]?.x === x && this.snake.cells[0].y === y;
-    },
     isFood(x, y) {
       return this.food?.x === x && this.food?.y === y
     },
@@ -64,26 +63,26 @@ const App = {
       switch (this.snake.direction) {
         case 'up':
           newCell = {
-            x: this.returnInRange(this.snake.cells[0].x - 1),
-            y: this.returnInRange(this.snake.cells[0].y)
+            x: this.returnRandInRange(this.snake.cells[0].x - 1),
+            y: this.returnRandInRange(this.snake.cells[0].y)
           }
           break
         case 'left':
           newCell = {
-            x: this.returnInRange(this.snake.cells[0].x),
-            y: this.returnInRange(this.snake.cells[0].y - 1)
+            x: this.returnRandInRange(this.snake.cells[0].x),
+            y: this.returnRandInRange(this.snake.cells[0].y - 1)
           }
           break
         case 'down':
           newCell = {
-            x: this.returnInRange(this.snake.cells[0].x + 1),
-            y: this.returnInRange(this.snake.cells[0].y)
+            x: this.returnRandInRange(this.snake.cells[0].x + 1),
+            y: this.returnRandInRange(this.snake.cells[0].y)
           }
           break
         case 'right':
           newCell = {
-            x: this.returnInRange(this.snake.cells[0].x),
-            y: this.returnInRange(this.snake.cells[0].y + 1)
+            x: this.returnRandInRange(this.snake.cells[0].x),
+            y: this.returnRandInRange(this.snake.cells[0].y + 1)
           }
           break
       }
@@ -127,13 +126,13 @@ const App = {
       }
       this.allowChangeDir = false
     },
-    returnInRange(value, start = 1, end = this.fieldLen) {
+    returnRandInRange(value, start = 1, end = this.fieldLen) {
       if (value > end) return value - end
       else if (value < start) return  value + end
       else  return  value
     },
     endGame() {
-      clearInterval(this.timeoutId)
+      this.clearInterval()
       this.gameStarted = false
       this.food = null
       this.snake.direction = null
@@ -147,14 +146,14 @@ const App = {
     document.addEventListener('keyup', this.directionPressHandler)
   },
   mounted() {
-    this.field =  Array(this.fieldLen).fill().map((a,i) => {
+    this.field = Array(this.fieldLen).fill().map((a,i) => {
       return Array(this.fieldLen).fill().map((_, j) => ({x: i+1, y: j+1}))
     }).flat()
   },
   unmounted() {
     document.removeEventListener('keyup', this.spacePressHandler)
     document.removeEventListener('keyup', this.directionPressHandler)
-    if (this.timeoutId) clearInterval((this.timeoutId))
+    this.clearInterval()
   }
 }
 
