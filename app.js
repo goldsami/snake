@@ -2,6 +2,7 @@ const App = {
   data() {
     return {
       gameSpeed: 500,
+      fieldLen: 3,
       snake: {
         direction: null,
         cells: []
@@ -27,12 +28,11 @@ const App = {
     start() {
       this.allowChangeDir = true
       this.snake.cells = [
-          {x: 3, y: 3}
+          {x: 1, y: 1}
       ]
       this.generateFood()
       if (this.timeoutId) clearInterval((this.timeoutId))
       this.timeoutId = setInterval(() => {
-        console.log('interval')
         if (this.snake.direction) {
           this.makeStep()
         }
@@ -40,7 +40,11 @@ const App = {
     },
     generateFood() {
       const freeCells = this.field.filter(val => !this.isSnake(val.x, val.y))
-      const foodCellIndex = Math.floor(Math.random() * freeCells.length) + 1
+      if (!freeCells.length) {
+        alert('You win')
+        this.endGame()
+      }
+      const foodCellIndex = Math.floor(Math.random() * freeCells.length)
       this.food = freeCells[foodCellIndex]
     },
     isSnake(x, y) {
@@ -119,7 +123,7 @@ const App = {
       }
       this.allowChangeDir = false
     },
-    returnInRange(value, start = 1, end = 10) {
+    returnInRange(value, start = 1, end = this.fieldLen) {
       if (value > end) return value - end
       else if (value < start) return  value + end
       else  return  value
@@ -138,8 +142,8 @@ const App = {
     document.addEventListener('keyup', this.directionPressHandler)
   },
   mounted() {
-    this.field =  Array(10).fill().map((a,i) => {
-      return Array(10).fill().map((_, j) => ({x: i+1, y: j+1}))
+    this.field =  Array(this.fieldLen).fill().map((a,i) => {
+      return Array(this.fieldLen).fill().map((_, j) => ({x: i+1, y: j+1}))
     }).flat()
   },
   unmounted() {
