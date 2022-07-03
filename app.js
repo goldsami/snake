@@ -1,11 +1,9 @@
 import { useSnake } from './use/snake.js'
-import { useInterval } from  './use/interval.js'
 
 const App = {
   setup() {
     return {
       ...useSnake(),
-      ...useInterval(),
     }
   },
   data() {
@@ -13,7 +11,7 @@ const App = {
       gameSpeed: 500,
       fieldLen: 10,
       food: null,
-      timeoutId: null,
+      intervalId: null,
       field: [],
       set maxScore(val) {
         localStorage.setItem('maxScore', val)
@@ -37,11 +35,11 @@ const App = {
       this.gameStarted = true
       this.allowChangeDir = true
       this.snake.cells = [
-          this.defaultCell
+        this.defaultCell
       ]
       this.generateFood()
       this.clearInterval()
-      this.timeoutId = setInterval(() => {
+      this.intervalId = setInterval(() => {
         if (this.snake.direction) {
           this.makeStep()
         }
@@ -133,8 +131,12 @@ const App = {
     },
     returnRandInRange(value, start = 1, end = this.fieldLen) {
       if (value > end) return value - end
-      else if (value < start) return  value + end
-      else  return  value
+      else if (value < start) return value + end
+      else return value
+    },
+    clearInterval() {
+      console.log('cl int', this.intervalId);
+      if (this.intervalId) clearInterval(this.intervalId)
     },
     endGame() {
       this.clearInterval()
@@ -151,8 +153,8 @@ const App = {
     document.addEventListener('keyup', this.directionPressHandler)
   },
   mounted() {
-    this.field = Array(this.fieldLen).fill().map((a,i) => {
-      return Array(this.fieldLen).fill().map((_, j) => ({x: i+1, y: j+1}))
+    this.field = Array(this.fieldLen).fill().map((a, i) => {
+      return Array(this.fieldLen).fill().map((_, j) => ({ x: i + 1, y: j + 1 }))
     }).flat()
   },
   unmounted() {
